@@ -23,6 +23,17 @@ test('loads component', async () => {
     Kubernetes: { Snapshots: [] },
     Id: 3,
     UserTrusted: false,
+    SecuritySettings: {
+      allowBindMountsForRegularUsers: false,
+      allowContainerCapabilitiesForRegularUsers: false,
+      allowDeviceMappingForRegularUsers: false,
+      allowHostNamespaceForRegularUsers: false,
+      allowPrivilegedModeForRegularUsers: false,
+      allowStackManagementForRegularUsers: false,
+      allowSysctlSettingForRegularUsers: false,
+      allowVolumeBrowserForRegularUsers: false,
+      enableHostManagementFeatures: false,
+    },
   };
   const { getByText } = renderComponent(env);
 
@@ -44,6 +55,17 @@ test('shows group name', async () => {
     Kubernetes: { Snapshots: [] },
     Id: 3,
     UserTrusted: false,
+    SecuritySettings: {
+      allowBindMountsForRegularUsers: false,
+      allowContainerCapabilitiesForRegularUsers: false,
+      allowDeviceMappingForRegularUsers: false,
+      allowHostNamespaceForRegularUsers: false,
+      allowPrivilegedModeForRegularUsers: false,
+      allowStackManagementForRegularUsers: false,
+      allowSysctlSettingForRegularUsers: false,
+      allowVolumeBrowserForRegularUsers: false,
+      enableHostManagementFeatures: false,
+    },
   };
 
   const { findByText } = renderComponent(env, { Name: groupName });

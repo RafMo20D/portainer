@@ -814,12 +814,6 @@ json-tree .branch-preview {
 }
 /* !uib-typeahead override */
 
-.kubectl-shell {
-  display: block;
-  text-align: center;
-  padding-bottom: 5px;
-}
-
 .no-margin {
   margin: 0 !important;
 }

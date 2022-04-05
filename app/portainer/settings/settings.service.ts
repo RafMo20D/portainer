@@ -4,9 +4,37 @@ import { PublicSettingsViewModel } from '@/portainer/models/settings';
 
 import axios, { parseAxiosError } from '../services/axios';
 
-export async function publicSettings() {
+enum AuthenticationMethod {
+  Internal = 1,
+  LDAP,
+  OAuth,
+}
+export interface PublicSettingsResponse {
+  // URL to a logo that will be displayed on the login page as well as on top of the sidebar. Will use default Portainer logo when value is empty string
+  LogoURL: string;
+  // Active authentication method for the Portainer instance. Valid values are: 1 for internal, 2 for LDAP, or 3 for oauth
+  AuthenticationMethod: AuthenticationMethod;
+  // Whether edge compute features are enabled
+  EnableEdgeComputeFeatures: boolean;
+  // Supported feature flags
+  Features: Record<string, boolean>;
+  // The URL used for oauth login
+  OAuthLoginURI: string;
+  // The URL used for oauth logout
+  OAuthLogoutURI: string;
+  // Whether portainer internal auth view will be hidden
+  OAuthHideInternalAuth: boolean;
+  // Whether telemetry is enabled
+  EnableTelemetry: boolean;
+  // The expiry of a Kubeconfig
+  KubeconfigExpiry: string;
+}
+
+export async function getPublicSettings() {
   try {
-    const { data } = await axios.get(buildUrl('public'));
+    const { data } = await axios.get<PublicSettingsResponse>(
+      buildUrl('public')
+    );
     return new PublicSettingsViewModel(data);
   } catch (e) {
     throw parseAxiosError(
@@ -14,15 +42,6 @@ export async function publicSettings() {
       'Unable to retrieve application settings'
     );
   }
-}
-
-enum AuthenticationMethod {
-  // AuthenticationInternal represents the internal authentication method (authentication against Portainer API)
-  AuthenticationInternal,
-  // AuthenticationLDAP represents the LDAP authentication method (authentication against a LDAP server)
-  AuthenticationLDAP,
-  // AuthenticationOAuth represents the OAuth authentication method (authentication against a authorization server)
-  AuthenticationOAuth,
 }
 
 export interface Settings {
@@ -85,6 +104,10 @@ export function useUpdateSettingsMutation() {
 
 export function useSettings<T = Settings>(select?: (settings: Settings) => T) {
   return useQuery(['settings'], getSettings, { select });
+}
+
+export function usePublicSettings() {
+  return useQuery(['settings', 'public'], () => getPublicSettings());
 }
 
 function buildUrl(subResource?: string, action?: string) {

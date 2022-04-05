@@ -9,6 +9,7 @@ import servicesModule from './services';
 import teamsModule from './teams';
 import homeModule from './home';
 import { accessControlModule } from './access-control';
+import { sidebarModule } from './Sidebar';
 
 async function initAuthentication(authManager, Authentication, $rootScope, $state) {
   authManager.checkAuthOnRefresh();
@@ -38,6 +39,7 @@ angular
     servicesModule,
     teamsModule,
     accessControlModule,
+    sidebarModule,
   ])
   .config([
     '$stateRegistryProvider',
@@ -66,8 +68,7 @@ angular
         },
         views: {
           'sidebar@': {
-            templateUrl: './views/sidebar/sidebar.html',
-            controller: 'SidebarController',
+            component: 'sidebar',
           },
         },
       };

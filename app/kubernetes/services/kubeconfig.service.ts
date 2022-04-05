@@ -2,7 +2,7 @@ import { saveAs } from 'file-saver';
 
 import axios, { parseAxiosError } from '@/portainer/services/axios';
 import { EnvironmentId } from '@/portainer/environments/types';
-import { publicSettings } from '@/portainer/settings/settings.service';
+import { getPublicSettings } from '@/portainer/settings/settings.service';
 
 const baseUrl = 'kubernetes';
 
@@ -24,7 +24,7 @@ export async function downloadKubeconfigFile(environmentIds: EnvironmentId[]) {
 }
 
 export async function expiryMessage() {
-  const settings = await publicSettings();
+  const settings = await getPublicSettings();
 
   const prefix = 'Kubeconfig file will';
   switch (settings.KubeconfigExpiry) {

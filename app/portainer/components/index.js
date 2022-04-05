@@ -2,7 +2,6 @@ import angular from 'angular';
 
 import { CreateAccessTokenAngular } from '../views/account/CreateAccessToken';
 
-import sidebarModule from './sidebar';
 import gitFormModule from './forms/git-form';
 import porAccessManagementModule from './accessManagement';
 import formComponentsModule from './form-components';
@@ -17,7 +16,7 @@ import { InformationPanelAngular } from './InformationPanel';
 import { ForcePasswordUpdateHintAngular, PasswordCheckHintAngular } from './PasswordCheckHint';
 
 export default angular
-  .module('portainer.app.components', [headerModule, boxSelectorModule, widgetModule, sidebarModule, gitFormModule, porAccessManagementModule, formComponentsModule])
+  .module('portainer.app.components', [headerModule, boxSelectorModule, widgetModule, gitFormModule, porAccessManagementModule, formComponentsModule])
   .component('informationPanel', InformationPanelAngular)
   .component('portainerTooltip', TooltipAngular)
   .component('reactExample', ReactExampleAngular)

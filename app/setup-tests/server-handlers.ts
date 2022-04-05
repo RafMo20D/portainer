@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { DefaultRequestBody, PathParams, rest } from 'msw';
 
 import {
   Edition,
@@ -7,10 +7,13 @@ import {
 } from '@/portainer/license-management/types';
 import { EnvironmentGroup } from '@/portainer/environment-groups/types';
 import { Tag } from '@/portainer/tags/types';
-
-import { createMockTeams, createMockUsers } from '../react-tools/test-mocks';
+import { PublicSettingsResponse } from '@/portainer/settings/settings.service';
+import { StatusResponse } from '@/portainer/services/api/status.service';
+import { createMockTeams } from '@/react-tools/test-mocks';
 
 import { azureHandlers } from './setup-handlers/azure';
+import { dockerHandlers } from './setup-handlers/docker';
+import { userHandlers } from './setup-handlers/users';
 
 const licenseInfo: LicenseInfo = {
   nodes: 1000,
@@ -27,10 +30,10 @@ export const handlers = [
   rest.get('/api/teams', async (req, res, ctx) =>
     res(ctx.json(createMockTeams(10)))
   ),
-  rest.get('/api/users', async (req, res, ctx) =>
-    res(ctx.json(createMockUsers(10)))
-  ),
+
   ...azureHandlers,
+  ...dockerHandlers,
+  ...userHandlers,
   rest.get('/api/licenses/info', (req, res, ctx) => res(ctx.json(licenseInfo))),
   rest.get('/api/status/nodes', (req, res, ctx) => res(ctx.json({ nodes: 3 }))),
   rest.get('/api/backup/s3/status', (req, res, ctx) =>
@@ -55,4 +58,12 @@ export const handlers = [
     ];
     return res(ctx.json(tags));
   }),
+  rest.get<DefaultRequestBody, PathParams, Partial<PublicSettingsResponse>>(
+    '/api/settings/public',
+    (req, res, ctx) => res(ctx.json({}))
+  ),
+  rest.get<DefaultRequestBody, PathParams, Partial<StatusResponse>>(
+    '/api/status',
+    (req, res, ctx) => res(ctx.json({}))
+  ),
 ];
