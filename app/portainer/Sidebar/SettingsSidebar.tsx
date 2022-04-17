@@ -94,7 +94,7 @@ export function SettingsSidebar({ isAdmin }: Props) {
               <SidebarMenuItem path="portainer.settings.edgeCompute" ident>
                 Edge Compute
               </SidebarMenuItem>
-              <SidebarMenuItemWrapper ident>
+              <SidebarMenuItemWrapper ident title="Help">
                 <a
                   href={
                     process.env.PORTAINER_EDITION === 'CE'
