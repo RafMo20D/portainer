@@ -61,10 +61,14 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
     const wsProtocol =
       window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const path = `${baseHref()}api/websocket/kubernetes-shell`;
+    const base = path.startsWith('http')
+      ? path.replace(/^https?:\/\//i, '')
+      : window.location.host + path;
+
     const queryParams = Object.entries(params)
       .map(([k, v]) => `${k}=${v}`)
       .join('&');
-    const url = `${wsProtocol}${window.location.host}${path}?${queryParams}`;
+    const url = `${wsProtocol}${base}?${queryParams}`;
 
     const socket = new WebSocket(url);
     const terminal = new Terminal();

@@ -11,28 +11,30 @@ export function SettingsSidebar({ isAdmin }: Props) {
   return (
     <SidebarSection title="Settings">
       <nav aria-label="Settings">
-        <SidebarMenu
-          iconClass="fa-users fa-fw"
-          label="Users"
-          path="portainer.users"
-          childrenPaths={[
-            'portainer.users.user',
-            'portainer.teams',
-            'portainer.teams.team',
-            'portainer.roles',
-            'portainer.roles.role',
-            'portainer.roles.new',
-          ]}
-        >
-          <SidebarMenuItem path="portainer.teams" ident>
-            Teams
-          </SidebarMenuItem>
-          {isAdmin && (
-            <SidebarMenuItem path="portainer.roles" ident>
-              Roles
+        {!window.ddExtension && (
+          <SidebarMenu
+            iconClass="fa-users fa-fw"
+            label="Users"
+            path="portainer.users"
+            childrenPaths={[
+              'portainer.users.user',
+              'portainer.teams',
+              'portainer.teams.team',
+              'portainer.roles',
+              'portainer.roles.role',
+              'portainer.roles.new',
+            ]}
+          >
+            <SidebarMenuItem path="portainer.teams" ident>
+              Teams
             </SidebarMenuItem>
-          )}
-        </SidebarMenu>
+            {isAdmin && (
+              <SidebarMenuItem path="portainer.roles" ident>
+                Roles
+              </SidebarMenuItem>
+            )}
+          </SidebarMenu>
+        )}
         {isAdmin && (
           <>
             <SidebarMenu
@@ -88,9 +90,11 @@ export function SettingsSidebar({ isAdmin }: Props) {
                 'portainer.settings.edgeCompute',
               ]}
             >
-              <SidebarMenuItem path="portainer.settings.authentication" ident>
-                Authentication
-              </SidebarMenuItem>
+              {!window.ddExtension && (
+                <SidebarMenuItem path="portainer.settings.authentication" ident>
+                  Authentication
+                </SidebarMenuItem>
+              )}
               <SidebarMenuItem path="portainer.settings.edgeCompute" ident>
                 Edge Compute
               </SidebarMenuItem>

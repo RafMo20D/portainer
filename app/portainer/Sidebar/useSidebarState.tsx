@@ -57,15 +57,20 @@ function useSidebarStateLocal() {
   const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
-    const value = isMobile ? false : storageIsOpen;
-    setIsOpen(value);
+    let isOpen = isMobile ? false : storageIsOpen;
+    if (window.ddExtension) {
+      isOpen = false;
+    }
+
+    setIsOpen(isOpen);
+
     // to sync "outside state" - for angularjs
     const $injector = angular.element(document).injector();
     $injector.invoke(
       /* @ngInject */ (
         SidebarService: ReturnType<typeof AngularSidebarService>
       ) => {
-        SidebarService.setIsOpen(value);
+        SidebarService.setIsOpen(isOpen);
       }
     );
   }, [storageIsOpen, isMobile]);
@@ -75,6 +80,10 @@ function useSidebarStateLocal() {
   }
 
   useEffect(() => {
+    if (window.ddExtension) {
+      return undefined;
+    }
+
     onResize();
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
