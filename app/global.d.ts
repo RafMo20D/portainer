@@ -1,3 +1,5 @@
+// declare const ddExtension: boolean | undefined;
+
 declare module '*.jpg' {
   export default '' as string;
 }
@@ -20,5 +22,5 @@ declare module 'axios-progress-bar' {
 }
 
 interface Window {
-  ddExtension: boolean;
+  ddExtension?: boolean;
 }

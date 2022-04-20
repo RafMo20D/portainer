@@ -123,7 +123,7 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
       handleDisconnect();
       window.removeEventListener('beforeunload', handleUnload);
     };
-  }, []);
+  }, [handleConnect, handleDisconnect, handleUnload]);
 
   return (
     <div className={clsx(styles.root, { [styles.minimized]: shell.minimized })}>

@@ -13,7 +13,7 @@ export function getPlatformType(envType: EnvironmentType) {
     case EnvironmentType.Azure:
       return PlatformType.Azure;
     default:
-      return null;
+      throw new Error(`${envType} is not a supported environment type`);
   }
 }
 

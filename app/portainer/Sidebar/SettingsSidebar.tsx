@@ -95,9 +95,11 @@ export function SettingsSidebar({ isAdmin }: Props) {
                   Authentication
                 </SidebarMenuItem>
               )}
+
               <SidebarMenuItem path="portainer.settings.edgeCompute" ident>
                 Edge Compute
               </SidebarMenuItem>
+
               <SidebarMenuItemWrapper ident title="Help">
                 <a
                   href={

@@ -5,12 +5,17 @@ import { Environment } from '@/portainer/environments/types';
 import { isKubernetesEnvironment } from '@/portainer/environments/utils';
 import { trackEvent } from '@/angulartics.matomo/analytics-services';
 import { Button } from '@/portainer/components/Button';
+import { usePublicSettings } from '@/portainer/settings/settings.service';
 
 interface Props {
   environments?: Environment[];
 }
 
 export function KubeconfigButton({ environments }: Props) {
+  const expiryQuery = usePublicSettings((settings) =>
+    expiryMessage(settings.KubeconfigExpiry)
+  );
+
   if (!environments) {
     return null;
   }
@@ -26,7 +31,7 @@ export function KubeconfigButton({ environments }: Props) {
   );
 
   function handleClick() {
-    if (!environments) {
+    if (!environments || !expiryQuery.data) {
       return;
     }
 
@@ -34,7 +39,7 @@ export function KubeconfigButton({ environments }: Props) {
       category: 'kubernetes',
     });
 
-    showKubeconfigModal(environments);
+    showKubeconfigModal(environments, expiryQuery.data);
   }
 }
 
@@ -45,7 +50,10 @@ function isKubeconfigButtonVisible(environments: Environment[]) {
   return environments.some((env) => isKubernetesEnvironment(env.Type));
 }
 
-async function showKubeconfigModal(environments: Environment[]) {
+async function showKubeconfigModal(
+  environments: Environment[],
+  expiryMessage: string
+) {
   const kubeEnvironments = environments.filter((env) =>
     isKubernetesEnvironment(env.Type)
   );
@@ -53,13 +61,6 @@ async function showKubeconfigModal(environments: Environment[]) {
     text: `${environment.Name} (${environment.URL})`,
     value: `${environment.Id}`,
   }));
-
-  let expiryMessage = '';
-  try {
-    expiryMessage = await kcService.expiryMessage();
-  } catch (e) {
-    notifications.error('Failed fetching kubeconfig expiry time', e as Error);
-  }
 
   confirmKubeconfigSelection(
     options,
@@ -78,4 +79,21 @@ async function showKubeconfigModal(environments: Environment[]) {
       }
     }
   );
+}
+
+export function expiryMessage(expiry: string) {
+  const prefix = 'Kubeconfig file will';
+  switch (expiry) {
+    case '24h':
+      return `${prefix} expire in 1 day.`;
+    case '168h':
+      return `${prefix} expire in 7 days.`;
+    case '720h':
+      return `${prefix} expire in 30 days.`;
+    case '8640h':
+      return `${prefix} expire in 1 year.`;
+    case '0':
+    default:
+      return `${prefix} not expire.`;
+  }
 }

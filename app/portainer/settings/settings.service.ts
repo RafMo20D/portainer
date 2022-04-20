@@ -106,8 +106,12 @@ export function useSettings<T = Settings>(select?: (settings: Settings) => T) {
   return useQuery(['settings'], getSettings, { select });
 }
 
-export function usePublicSettings() {
-  return useQuery(['settings', 'public'], () => getPublicSettings());
+export function usePublicSettings<T = PublicSettingsViewModel>(
+  select?: (settings: PublicSettingsViewModel) => T
+) {
+  return useQuery(['settings', 'public'], () => getPublicSettings(), {
+    select,
+  });
 }
 
 function buildUrl(subResource?: string, action?: string) {
