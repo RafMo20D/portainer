@@ -1,5 +1,9 @@
 import { SidebarMenuItem } from '@/portainer/Sidebar/SidebarMenuItem';
-import { Environment, EnvironmentId } from '@/portainer/environments/types';
+import {
+  type Environment,
+  type EnvironmentId,
+  EnvironmentStatus,
+} from '@/portainer/environments/types';
 import {
   Authorized,
   useUser,
@@ -32,7 +36,7 @@ export function DockerSidebar({ environmentId, environment }: Props) {
   const isSwarmManager = envInfoQuery.data;
   const apiVersion = envVersionQuery.data || 0;
 
-  const offlineMode = environment.Status === 2;
+  const offlineMode = environment.Status === EnvironmentStatus.Down;
 
   return (
     <nav aria-label="Docker">
