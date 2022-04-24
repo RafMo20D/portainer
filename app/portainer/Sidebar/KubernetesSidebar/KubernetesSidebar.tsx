@@ -88,7 +88,6 @@ export function KubernetesSidebar({ environmentId }: Props) {
           <SidebarMenuItem
             path="portainer.k8sendpoint.kubernetesConfig"
             pathParams={{ id: environmentId }}
-            ident
           >
             Setup
           </SidebarMenuItem>
@@ -97,7 +96,6 @@ export function KubernetesSidebar({ environmentId }: Props) {
         <SidebarMenuItem
           path="kubernetes.registries"
           pathParams={{ endpointId: environmentId }}
-          ident
         >
           Registries
         </SidebarMenuItem>

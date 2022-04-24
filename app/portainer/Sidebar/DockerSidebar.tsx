@@ -59,7 +59,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
           <SidebarMenuItem
             path="docker.templates.custom"
             pathParams={{ endpointId: environmentId }}
-            ident
           >
             Custom Templates
           </SidebarMenuItem>
@@ -167,7 +166,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
             <SidebarMenuItem
               path="docker.featuresConfiguration"
               pathParams={{ endpointId: environmentId }}
-              ident
             >
               Setup
             </SidebarMenuItem>
@@ -176,7 +174,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
           <SidebarMenuItem
             path="docker.registries"
             pathParams={{ endpointId: environmentId }}
-            ident
           >
             Registries
           </SidebarMenuItem>
@@ -202,7 +199,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
             <SidebarMenuItem
               path="docker.featuresConfiguration"
               pathParams={{ endpointId: environmentId }}
-              ident
             >
               Setup
             </SidebarMenuItem>
@@ -211,7 +207,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
           <SidebarMenuItem
             path="docker.registries"
             pathParams={{ endpointId: environmentId }}
-            ident
           >
             Registries
           </SidebarMenuItem>

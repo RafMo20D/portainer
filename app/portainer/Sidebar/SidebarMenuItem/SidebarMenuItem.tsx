@@ -8,7 +8,6 @@ import styles from './SidebarMenuItem.module.css';
 
 interface WrapperProps {
   className?: string;
-  ident?: boolean;
   title?: string;
 }
 
@@ -17,21 +16,17 @@ interface Props {
   pathParams?: Record<string, unknown>;
   iconClass?: string;
   className?: string;
-  ident?: boolean;
   label?: string;
 }
 
 export function SidebarMenuItemWrapper({
-  ident,
   className,
   children,
   ...props
 }: PropsWithChildren<WrapperProps> & AriaAttributes) {
   return (
     <li
-      className={clsx(styles.sidebarMenuItem, className, {
-        [styles.ident]: ident,
-      })}
+      className={clsx(styles.sidebarMenuItem, className)}
       // disabling to pass aria and test props
       // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
@@ -47,7 +42,6 @@ export function SidebarMenuItem({
   iconClass,
   className,
   children,
-  ident = false,
   label,
   ...ariaProps
 }: PropsWithChildren<Props> & AriaAttributes) {
@@ -56,7 +50,6 @@ export function SidebarMenuItem({
   return (
     <SidebarMenuItemWrapper
       className={className}
-      ident={ident}
       title={itemLabel}
       aria-label={itemLabel}
       // eslint-disable-next-line react/jsx-props-no-spreading

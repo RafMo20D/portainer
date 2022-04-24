@@ -25,13 +25,9 @@ export function SettingsSidebar({ isAdmin }: Props) {
               'portainer.roles.new',
             ]}
           >
-            <SidebarMenuItem path="portainer.teams" ident>
-              Teams
-            </SidebarMenuItem>
+            <SidebarMenuItem path="portainer.teams">Teams</SidebarMenuItem>
             {isAdmin && (
-              <SidebarMenuItem path="portainer.roles" ident>
-                Roles
-              </SidebarMenuItem>
+              <SidebarMenuItem path="portainer.roles">Roles</SidebarMenuItem>
             )}
           </SidebarMenu>
         )}
@@ -52,12 +48,8 @@ export function SettingsSidebar({ isAdmin }: Props) {
                 'portainer.tags',
               ]}
             >
-              <SidebarMenuItem path="portainer.groups" ident>
-                Groups
-              </SidebarMenuItem>
-              <SidebarMenuItem path="portainer.tags" ident>
-                Tags
-              </SidebarMenuItem>
+              <SidebarMenuItem path="portainer.groups">Groups</SidebarMenuItem>
+              <SidebarMenuItem path="portainer.tags">Tags</SidebarMenuItem>
             </SidebarMenu>
             <SidebarMenuItem
               path="portainer.registries"
@@ -77,7 +69,7 @@ export function SettingsSidebar({ isAdmin }: Props) {
               path="portainer.authLogs"
               childrenPaths={['portainer.activityLogs']}
             >
-              <SidebarMenuItem path="portainer.activityLogs" ident>
+              <SidebarMenuItem path="portainer.activityLogs">
                 Activity Logs
               </SidebarMenuItem>
             </SidebarMenu>
@@ -91,16 +83,16 @@ export function SettingsSidebar({ isAdmin }: Props) {
               ]}
             >
               {!window.ddExtension && (
-                <SidebarMenuItem path="portainer.settings.authentication" ident>
+                <SidebarMenuItem path="portainer.settings.authentication">
                   Authentication
                 </SidebarMenuItem>
               )}
 
-              <SidebarMenuItem path="portainer.settings.edgeCompute" ident>
+              <SidebarMenuItem path="portainer.settings.edgeCompute">
                 Edge Compute
               </SidebarMenuItem>
 
-              <SidebarMenuItemWrapper ident title="Help">
+              <SidebarMenuItemWrapper title="Help">
                 <a
                   href={
                     process.env.PORTAINER_EDITION === 'CE'

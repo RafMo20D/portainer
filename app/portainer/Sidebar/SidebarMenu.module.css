@@ -17,3 +17,7 @@
 .items {
   padding: 0;
 }
+
+.items > * {
+  text-indent: 35px;
+}
