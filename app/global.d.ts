@@ -1,5 +1,3 @@
-// declare const ddExtension: boolean | undefined;
-
 declare module '*.jpg' {
   export default '' as string;
 }
@@ -22,5 +20,8 @@ declare module 'axios-progress-bar' {
 }
 
 interface Window {
+  /**
+   * will be true if portainer is run as a Docker Desktop Extension
+   */
   ddExtension?: boolean;
 }
