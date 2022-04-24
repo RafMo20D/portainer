@@ -5,7 +5,7 @@ import { useIsTeamLeader } from '@/portainer/users/queries';
 import { usePublicSettings } from '@/portainer/settings/settings.service';
 
 import styles from './Sidebar.module.css';
-import { EdgeSidebar } from './EdgeSidebar';
+import { EdgeComputeSidebar } from './EdgeComputeSidebar';
 import { EnvironmentSidebar } from './EnvironmentSidebar';
 import { SettingsSidebar } from './SettingsSidebar';
 import { SidebarMenuItem } from './SidebarMenuItem';
@@ -42,7 +42,7 @@ export function Sidebar({ environment }: Props) {
 
             {environment && <EnvironmentSidebar environment={environment} />}
 
-            {isAdmin && EnableEdgeComputeFeatures && <EdgeSidebar />}
+            {isAdmin && EnableEdgeComputeFeatures && <EdgeComputeSidebar />}
 
             {(isAdmin || isTeamLeader) && <SettingsSidebar isAdmin={isAdmin} />}
           </ul>

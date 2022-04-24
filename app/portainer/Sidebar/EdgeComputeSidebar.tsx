@@ -1,7 +1,7 @@
 import { SidebarMenuItem } from './SidebarMenuItem';
 import { SidebarSection } from './SidebarSection';
 
-export function EdgeSidebar() {
+export function EdgeComputeSidebar() {
   return (
     <SidebarSection title="Edge compute">
       <nav aria-label="Edge">
