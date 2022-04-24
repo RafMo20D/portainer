@@ -3,6 +3,7 @@ import angular, { IScope } from 'angular';
 
 import * as storage from '@/portainer/hooks/useLocalStorage';
 
+// using bootstrap breakpoint - https://getbootstrap.com/docs/5.0/layout/breakpoints/#min-width
 const mobileWidth = 992;
 const storageKey = 'toolbar_toggle';
 
