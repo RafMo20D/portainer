@@ -1,7 +1,5 @@
-import { SidebarMenu } from './SidebarMenu';
-import { SidebarMenuItem } from './SidebarMenuItem';
+import { SidebarItem } from './SidebarItem';
 import { SidebarSection } from './SidebarSection';
-import { SidebarMenuItemWrapper } from './SidebarMenuItem/SidebarMenuItem';
 
 interface Props {
   isAdmin: boolean;
@@ -12,87 +10,65 @@ export function SettingsSidebar({ isAdmin }: Props) {
     <SidebarSection title="Settings">
       <nav aria-label="Settings">
         {!window.ddExtension && (
-          <SidebarMenu
-            iconClass="fa-users fa-fw"
+          <SidebarItem
+            to="portainer.users"
             label="Users"
-            path="portainer.users"
-            childrenPaths={[
-              'portainer.users.user',
-              'portainer.teams',
-              'portainer.teams.team',
-              'portainer.roles',
-              'portainer.roles.role',
-              'portainer.roles.new',
-            ]}
+            iconClass="fa-users fa-fw"
           >
-            <SidebarMenuItem path="portainer.teams">Teams</SidebarMenuItem>
-            {isAdmin && (
-              <SidebarMenuItem path="portainer.roles">Roles</SidebarMenuItem>
-            )}
-          </SidebarMenu>
+            <SidebarItem to="portainer.teams" label="Teams" />
+
+            {isAdmin && <SidebarItem to="portainer.roles" label="Roles" />}
+          </SidebarItem>
         )}
         {isAdmin && (
           <>
-            <SidebarMenu
-              iconClass="fa-plug fa-fw"
+            <SidebarItem
               label="Environments"
-              path="portainer.endpoints"
-              childrenPaths={[
-                'portainer.endpoints.endpoint',
-                'portainer.endpoints.new',
-                'portainer.endpoints.endpoint.access',
-                'portainer.groups',
-                'portainer.groups.group',
-                'portainer.groups.group.access',
-                'portainer.groups.new',
-                'portainer.tags',
-              ]}
+              to="portainer.endpoints"
+              iconClass="fa-plug fa-fw"
             >
-              <SidebarMenuItem path="portainer.groups">Groups</SidebarMenuItem>
-              <SidebarMenuItem path="portainer.tags">Tags</SidebarMenuItem>
-            </SidebarMenu>
-            <SidebarMenuItem
-              path="portainer.registries"
+              <SidebarItem to="portainer.groups" label="Groups" />
+              <SidebarItem to="portainer.tags" label="Tags" />
+            </SidebarItem>
+
+            <SidebarItem
+              label="Registries"
+              to="portainer.registries"
               iconClass="fa-database fa-fw"
-            >
-              Registries
-            </SidebarMenuItem>
-            <SidebarMenuItem
-              path="portainer.licenses"
+            />
+
+            <SidebarItem
+              to="portainer.licenses"
+              label="Licenses"
               iconClass="fa-file-signature fa-fw"
-            >
-              Licenses
-            </SidebarMenuItem>
-            <SidebarMenu
+            />
+
+            <SidebarItem
               label="Authentication logs"
+              to="portainer.authLogs"
               iconClass="fa-history fa-fw"
-              path="portainer.authLogs"
-              childrenPaths={['portainer.activityLogs']}
             >
-              <SidebarMenuItem path="portainer.activityLogs">
-                Activity Logs
-              </SidebarMenuItem>
-            </SidebarMenu>
-            <SidebarMenu
+              <SidebarItem to="portainer.activityLogs" label="Activity Logs" />
+            </SidebarItem>
+
+            <SidebarItem
+              to="portainer.settings"
               label="Settings"
               iconClass="fa-cogs fa-fw"
-              path="portainer.settings"
-              childrenPaths={[
-                'portainer.settings.authentication',
-                'portainer.settings.edgeCompute',
-              ]}
             >
               {!window.ddExtension && (
-                <SidebarMenuItem path="portainer.settings.authentication">
-                  Authentication
-                </SidebarMenuItem>
+                <SidebarItem
+                  to="portainer.settings.authentication"
+                  label="Authentication"
+                />
               )}
 
-              <SidebarMenuItem path="portainer.settings.edgeCompute">
-                Edge Compute
-              </SidebarMenuItem>
+              <SidebarItem
+                to="portainer.settings.edgeCompute"
+                label="Edge Compute"
+              />
 
-              <SidebarMenuItemWrapper title="Help">
+              <SidebarItem.Wrapper label="Help / About">
                 <a
                   href={
                     process.env.PORTAINER_EDITION === 'CE'
@@ -104,8 +80,8 @@ export function SettingsSidebar({ isAdmin }: Props) {
                 >
                   Help / About
                 </a>
-              </SidebarMenuItemWrapper>
-            </SidebarMenu>
+              </SidebarItem.Wrapper>
+            </SidebarItem>
           </>
         )}
       </nav>

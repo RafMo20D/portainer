@@ -1,10 +1,10 @@
 import { Meta, Story } from '@storybook/react';
 
-import { SidebarMenuItem } from './SidebarMenuItem';
+import { SidebarItem } from '.';
 
 const meta: Meta = {
   title: 'Components/SidebarMenuItem',
-  component: SidebarMenuItem,
+  component: SidebarItem,
 };
 export default meta;
 
@@ -17,14 +17,12 @@ interface StoryProps {
 function Template({ iconClass, className, label: linkName }: StoryProps) {
   return (
     <ul className="sidebar">
-      <SidebarMenuItem
-        path="example.path"
-        pathParams={{ endpointId: 1 }}
-        iconClass={iconClass}
-        className={className}
-      >
-        {linkName}
-      </SidebarMenuItem>
+      <SidebarItem.Wrapper className={className}>
+        <SidebarItem.Link to="example.path" params={{ endpointId: 1 }}>
+          {linkName}
+          {iconClass && <SidebarItem.Icon iconClass={iconClass} />}
+        </SidebarItem.Link>
+      </SidebarItem.Wrapper>
     </ul>
   );
 }

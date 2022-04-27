@@ -1,17 +1,18 @@
-.sidebar-menu .sidebar-menu-head {
+.sidebar-menu-head {
   position: relative;
 }
 
-.sidebar-menu .sidebar-menu-head .sidebar-menu-indicator {
+.sidebar-menu-head .sidebar-menu-indicator {
   background: none;
   border: 0;
   width: fit-content;
   height: fit-content;
   color: white;
-  margin: 0 10px;
+  margin: 0;
   padding: 0;
   position: absolute;
-  left: -5px;
+  left: 10px;
+  top: 25%;
 }
 
 .items {

@@ -242,7 +242,6 @@ html {
   --border-modal: 0px;
   --border-sortbutton: var(--grey-8);
 
-  --hover-sidebar-color: var(--grey-37);
   --shadow-box-color: 0 3px 10px -2px var(--grey-50);
   --shadow-boxselector-color: 0 3px 10px -2px var(--grey-50);
   --blue-color: var(--blue-13);
@@ -415,7 +414,6 @@ html {
   --border-modal: 0px;
   --border-sortbutton: var(--grey-3);
 
-  --hover-sidebar-color: var(--grey-3);
   --blue-color: var(--blue-2);
   --button-close-color: var(--white-color);
   --button-opacity: 0.6;
@@ -576,8 +574,6 @@ html {
   --border-blocklist-color: var(--white-color);
   --border-sortbutton: var(--black-color);
 
-  --hover-sidebar-color: var(--blue-9);
-  --hover-sidebar-color: var(--black-color);
   --shadow-box-color: none;
   --shadow-boxselector-color: none;
 

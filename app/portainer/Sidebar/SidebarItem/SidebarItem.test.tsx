@@ -1,6 +1,6 @@
 import { render } from '@/react-tools/test-utils';
 
-import { SidebarMenuItem } from './SidebarMenuItem';
+import { SidebarItem } from '.';
 
 test('should be visible & have expected class', () => {
   const { getByRole, getByText } = renderComponent('Test', 'testClass');
@@ -24,13 +24,11 @@ test('icon should not be rendered if iconClass is not provided', () => {
 
 function renderComponent(label = '', className = '', iconClass = '') {
   return render(
-    <SidebarMenuItem
-      path=""
-      pathParams={{ endpointId: 1 }}
-      iconClass={iconClass}
-      className={className}
-    >
-      {label}
-    </SidebarMenuItem>
+    <SidebarItem.Wrapper className={className}>
+      <SidebarItem.Link to="" params={{ endpointId: 1 }}>
+        {label}
+      </SidebarItem.Link>
+      <SidebarItem.Icon iconClass={iconClass} />
+    </SidebarItem.Wrapper>
   );
 }

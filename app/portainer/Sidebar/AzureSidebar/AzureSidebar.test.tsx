@@ -1,3 +1,5 @@
+import { UserContext } from '@/portainer/hooks/useUser';
+import { UserViewModel } from '@/portainer/models/user';
 import { render, within } from '@/react-tools/test-utils';
 
 import { AzureSidebar } from './AzureSidebar';
@@ -30,5 +32,11 @@ test('dashboard items should render correctly', () => {
 });
 
 function renderComponent() {
-  return render(<AzureSidebar environmentId={1} />);
+  const user = new UserViewModel({ Username: 'user' });
+
+  return render(
+    <UserContext.Provider value={{ user }}>
+      <AzureSidebar environmentId={1} />
+    </UserContext.Provider>
+  );
 }

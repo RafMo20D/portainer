@@ -1,4 +1,4 @@
-import { SidebarMenuItem } from '@/portainer/Sidebar/SidebarMenuItem';
+import { SidebarItem } from '@/portainer/Sidebar/SidebarItem';
 import {
   type Environment,
   type EnvironmentId,
@@ -9,7 +9,6 @@ import {
   useUser,
   isEnvironmentAdmin,
 } from '@/portainer/hooks/useUser';
-import { SidebarMenu } from '@/portainer/Sidebar/SidebarMenu';
 import { useInfo, useVersion } from '@/docker/services/system.service';
 
 interface Props {
@@ -38,180 +37,138 @@ export function DockerSidebar({ environmentId, environment }: Props) {
 
   const offlineMode = environment.Status === EnvironmentStatus.Down;
 
+  const setupSubMenuProps = isSwarmManager
+    ? {
+        label: 'Swarm',
+        iconClass: 'fa-object-group fa-fw',
+        to: 'docker.swarm',
+      }
+    : {
+        label: 'Host',
+        iconClass: 'fa-th fa-fw',
+        to: 'docker.host',
+      };
+
   return (
     <nav aria-label="Docker">
-      <SidebarMenuItem
-        path="docker.dashboard"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="docker.dashboard"
+        params={{ endpointId: environmentId }}
         iconClass="fa-tachometer-alt fa-fw"
-      >
-        Dashboard
-      </SidebarMenuItem>
+        label="Dashboard"
+      />
 
       {!offlineMode && (
-        <SidebarMenu
+        <SidebarItem
           label="App Templates"
           iconClass="fa-rocket fa-fw"
-          path="docker.templates"
-          pathParams={{ endpointId: environmentId }}
-          childrenPaths={[]}
+          to="docker.templates"
+          params={{ endpointId: environmentId }}
         >
-          <SidebarMenuItem
-            path="docker.templates.custom"
-            pathParams={{ endpointId: environmentId }}
-          >
-            Custom Templates
-          </SidebarMenuItem>
-        </SidebarMenu>
+          <SidebarItem
+            label="Custom Templates"
+            to="docker.templates.custom"
+            params={{ endpointId: environmentId }}
+          />
+        </SidebarItem>
       )}
 
       {areStacksVisible && (
-        <SidebarMenuItem
-          path="docker.stacks"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="docker.stacks"
+          params={{ endpointId: environmentId }}
           iconClass="fa-th-list fa-fw"
-        >
-          Stacks
-        </SidebarMenuItem>
+          label="Stacks"
+        />
       )}
 
       {isSwarmManager && (
-        <SidebarMenuItem
-          path="docker.services"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="docker.services"
+          params={{ endpointId: environmentId }}
           iconClass="fa-list-alt fa-fw"
-        >
-          Services
-        </SidebarMenuItem>
+          label="Services"
+        />
       )}
 
-      <SidebarMenuItem
-        path="docker.containers"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="docker.containers"
+        params={{ endpointId: environmentId }}
         iconClass="fa-cubes fa-fw"
-      >
-        Containers
-      </SidebarMenuItem>
+        label="Containers"
+      />
 
-      <SidebarMenuItem
-        path="docker.images"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="docker.images"
+        params={{ endpointId: environmentId }}
         iconClass="fa-clone fa-fw"
-      >
-        Images
-      </SidebarMenuItem>
+        label="Images"
+      />
 
-      <SidebarMenuItem
-        path="docker.networks"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="docker.networks"
+        params={{ endpointId: environmentId }}
         iconClass="fa-sitemap fa-fw"
-      >
-        Networks
-      </SidebarMenuItem>
+        label="Networks"
+      />
 
-      <SidebarMenuItem
-        path="docker.volumes"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="docker.volumes"
+        params={{ endpointId: environmentId }}
         iconClass="fa-hdd fa-fw"
-      >
-        Volumes
-      </SidebarMenuItem>
+        label="Volumes"
+      />
 
       {apiVersion >= 1.3 && isSwarmManager && (
-        <SidebarMenuItem
-          path="docker.configs"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="docker.configs"
+          params={{ endpointId: environmentId }}
           iconClass="fa-file-code fa-fw"
-        >
-          Configs
-        </SidebarMenuItem>
+          label="Configs"
+        />
       )}
 
       {apiVersion >= 1.25 && isSwarmManager && (
-        <SidebarMenuItem
-          path="docker.secrets"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="docker.secrets"
+          params={{ endpointId: environmentId }}
           iconClass="fa-user-secret fa-fw"
-        >
-          Secrets
-        </SidebarMenuItem>
+          label="Secrets"
+        />
       )}
 
       {!isSwarmManager && isAdmin && !offlineMode && (
-        <SidebarMenuItem
-          path="docker.events"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="docker.events"
+          params={{ endpointId: environmentId }}
           iconClass="fa-history fa-fw"
-        >
-          Events
-        </SidebarMenuItem>
+          label="Events"
+        />
       )}
 
-      {!isSwarmManager && (
-        <SidebarMenu
-          label="Host"
-          iconClass="fa-th fa-fw"
-          path="docker.host"
-          pathParams={{ endpointId: environmentId }}
-          childrenPaths={[
-            'docker.registries',
-            'docker.registries.access',
-            'docker.featuresConfiguration',
-          ]}
+      <SidebarItem
+        label={setupSubMenuProps.label}
+        iconClass={setupSubMenuProps.iconClass}
+        to={setupSubMenuProps.to}
+        params={{ endpointId: environmentId }}
+      >
+        <Authorized
+          authorizations="PortainerEndpointUpdateSettings"
+          adminOnlyCE
         >
-          <Authorized
-            authorizations="PortainerEndpointUpdateSettings"
-            adminOnlyCE
-          >
-            <SidebarMenuItem
-              path="docker.featuresConfiguration"
-              pathParams={{ endpointId: environmentId }}
-            >
-              Setup
-            </SidebarMenuItem>
-          </Authorized>
+          <SidebarItem
+            to="docker.featuresConfiguration"
+            params={{ endpointId: environmentId }}
+            label="Setup"
+          />
+        </Authorized>
 
-          <SidebarMenuItem
-            path="docker.registries"
-            pathParams={{ endpointId: environmentId }}
-          >
-            Registries
-          </SidebarMenuItem>
-        </SidebarMenu>
-      )}
-
-      {isSwarmManager && (
-        <SidebarMenu
-          label="Swarm"
-          iconClass="fa-object-group fa-fw"
-          path="docker.swarm"
-          pathParams={{ endpointId: environmentId }}
-          childrenPaths={[
-            'docker.registries',
-            'docker.registries.access',
-            'docker.featuresConfiguration',
-          ]}
-        >
-          <Authorized
-            authorizations="PortainerEndpointUpdateSettings"
-            adminOnlyCE
-          >
-            <SidebarMenuItem
-              path="docker.featuresConfiguration"
-              pathParams={{ endpointId: environmentId }}
-            >
-              Setup
-            </SidebarMenuItem>
-          </Authorized>
-
-          <SidebarMenuItem
-            path="docker.registries"
-            pathParams={{ endpointId: environmentId }}
-          >
-            Registries
-          </SidebarMenuItem>
-        </SidebarMenu>
-      )}
+        <SidebarItem
+          to="docker.registries"
+          params={{ endpointId: environmentId }}
+          label="Registries"
+        />
+      </SidebarItem>
     </nav>
   );
 }

@@ -1,4 +1,4 @@
-import { SidebarMenuItem } from '@/portainer/Sidebar/SidebarMenuItem';
+import { SidebarItem } from '@/portainer/Sidebar/SidebarItem';
 import { EnvironmentId } from '@/portainer/environments/types';
 
 interface Props {
@@ -8,20 +8,18 @@ interface Props {
 export function AzureSidebar({ environmentId }: Props) {
   return (
     <nav aria-label="Azure">
-      <SidebarMenuItem
-        path="azure.dashboard"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="azure.dashboard"
+        params={{ endpointId: environmentId }}
         iconClass="fa-tachometer-alt fa-fw"
-      >
-        Dashboard
-      </SidebarMenuItem>
-      <SidebarMenuItem
-        path="azure.containerinstances"
-        pathParams={{ endpointId: environmentId }}
+        label="Dashboard"
+      />
+      <SidebarItem
+        to="azure.containerinstances"
+        params={{ endpointId: environmentId }}
         iconClass="fa-cubes fa-fw"
-      >
-        Container instances
-      </SidebarMenuItem>
+        label="Container instances"
+      />
     </nav>
   );
 }

@@ -1,7 +1,6 @@
-import { SidebarMenuItem } from '@/portainer/Sidebar/SidebarMenuItem';
+import { SidebarItem } from '@/portainer/Sidebar/SidebarItem';
 import { EnvironmentId } from '@/portainer/environments/types';
 import { Authorized } from '@/portainer/hooks/useUser';
-import { SidebarMenu } from '@/portainer/Sidebar/SidebarMenu';
 
 import { KubectlShellButton } from './KubectlShell';
 
@@ -14,92 +13,77 @@ export function KubernetesSidebar({ environmentId }: Props) {
     <nav aria-label="Kubernetes">
       <KubectlShellButton environmentId={environmentId} />
 
-      <SidebarMenuItem
-        path="kubernetes.dashboard"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.dashboard"
+        params={{ endpointId: environmentId }}
         iconClass="fa-tachometer-alt fa-fw"
-      >
-        Dashboard
-      </SidebarMenuItem>
+        label="Dashboard"
+      />
 
-      <SidebarMenuItem
-        path="kubernetes.templates.custom"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.templates.custom"
+        params={{ endpointId: environmentId }}
         iconClass="fa-rocket fa-fw"
-      >
-        Custom Templates
-      </SidebarMenuItem>
+        label="Custom Templates"
+      />
 
-      <SidebarMenuItem
-        path="kubernetes.resourcePools"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.resourcePools"
+        params={{ endpointId: environmentId }}
         iconClass="fa-layer-group fa-fw"
-      >
-        Namespaces
-      </SidebarMenuItem>
+        label="Namespaces"
+      />
 
       <Authorized authorizations="HelmInstallChart">
-        <SidebarMenuItem
-          path="kubernetes.templates.helm"
-          pathParams={{ endpointId: environmentId }}
+        <SidebarItem
+          to="kubernetes.templates.helm"
+          params={{ endpointId: environmentId }}
           iconClass="fa-dharmachakra fa-fw"
-        >
-          Helm
-        </SidebarMenuItem>
+          label="Helm"
+        />
       </Authorized>
 
-      <SidebarMenuItem
-        path="kubernetes.applications"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.applications"
+        params={{ endpointId: environmentId }}
         iconClass="fa-laptop-code fa-fw"
-      >
-        Applications
-      </SidebarMenuItem>
+        label="Applications"
+      />
 
-      <SidebarMenuItem
-        path="kubernetes.configurations"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.configurations"
+        params={{ endpointId: environmentId }}
         iconClass="fa-file-code fa-fw"
-      >
-        ConfigMaps & Secrets
-      </SidebarMenuItem>
+        label="ConfigMaps & Secrets"
+      />
 
-      <SidebarMenuItem
-        path="kubernetes.volumes"
-        pathParams={{ endpointId: environmentId }}
+      <SidebarItem
+        to="kubernetes.volumes"
+        params={{ endpointId: environmentId }}
         iconClass="fa-database fa-fw"
-      >
-        Volumes
-      </SidebarMenuItem>
+        label="Volumes"
+      />
 
-      <SidebarMenu
+      <SidebarItem
         iconClass="fa-server fa-fw"
         label="Cluster"
-        path="kubernetes.cluster"
-        pathParams={{ endpointId: environmentId }}
-        childrenPaths={[
-          'kubernetes.cluster',
-          'portainer.k8sendpoint.kubernetesConfig',
-          'kubernetes.registries',
-          'kubernetes.registries.access',
-        ]}
+        to="kubernetes.cluster"
+        params={{ endpointId: environmentId }}
       >
-        <Authorized authorizations="K8sClusterSetupRW" adminOnlyCE>
-          <SidebarMenuItem
-            path="portainer.k8sendpoint.kubernetesConfig"
-            pathParams={{ id: environmentId }}
-          >
-            Setup
-          </SidebarMenuItem>
-        </Authorized>
+        <SidebarItem
+          to="portainer.k8sendpoint.kubernetesConfig"
+          params={{ id: environmentId }}
+          label="Setup"
+          authorizations="K8sClusterSetupRW"
+          adminOnlyCE
+        />
 
-        <SidebarMenuItem
-          path="kubernetes.registries"
-          pathParams={{ endpointId: environmentId }}
-        >
-          Registries
-        </SidebarMenuItem>
-      </SidebarMenu>
+        <SidebarItem
+          to="kubernetes.registries"
+          params={{ endpointId: environmentId }}
+          label="Registries"
+        />
+      </SidebarItem>
     </nav>
   );
 }

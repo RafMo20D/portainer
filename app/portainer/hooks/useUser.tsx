@@ -83,6 +83,10 @@ export function hasAuthorizations(
   const authorizationsArray =
     typeof authorizations === 'string' ? [authorizations] : authorizations;
 
+  if (authorizationsArray.length === 0) {
+    return true;
+  }
+
   if (process.env.PORTAINER_EDITION === 'CE') {
     return !adminOnlyCE || isAdmin(user);
   }

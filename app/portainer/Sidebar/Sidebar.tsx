@@ -8,7 +8,7 @@ import styles from './Sidebar.module.css';
 import { EdgeComputeSidebar } from './EdgeComputeSidebar';
 import { EnvironmentSidebar } from './EnvironmentSidebar';
 import { SettingsSidebar } from './SettingsSidebar';
-import { SidebarMenuItem } from './SidebarMenuItem';
+import { SidebarItem } from './SidebarItem';
 import { Footer } from './Footer';
 import { Header } from './Header';
 import { SidebarProvider } from './useSidebarState';
@@ -36,9 +36,11 @@ export function Sidebar({ environment }: Props) {
         <Header logo={LogoURL} />
         <div className={styles.sidebarContent}>
           <ul className={styles.sidebar}>
-            <SidebarMenuItem path="portainer.home" iconClass="fa-home fa-fw">
-              Home
-            </SidebarMenuItem>
+            <SidebarItem
+              to="portainer.home"
+              iconClass="fa-home fa-fw"
+              label="Home"
+            />
 
             {environment && <EnvironmentSidebar environment={environment} />}
 
