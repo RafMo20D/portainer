@@ -7,7 +7,7 @@ interface Props {
 
 export function AzureSidebar({ environmentId }: Props) {
   return (
-    <nav aria-label="Azure">
+    <>
       <SidebarItem
         to="azure.dashboard"
         params={{ endpointId: environmentId }}
@@ -20,6 +20,6 @@ export function AzureSidebar({ environmentId }: Props) {
         iconClass="fa-cubes fa-fw"
         label="Container instances"
       />
-    </nav>
+    </>
   );
 }

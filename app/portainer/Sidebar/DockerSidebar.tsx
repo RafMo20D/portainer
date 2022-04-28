@@ -50,7 +50,7 @@ export function DockerSidebar({ environmentId, environment }: Props) {
       };
 
   return (
-    <nav aria-label="Docker">
+    <>
       <SidebarItem
         to="docker.dashboard"
         params={{ endpointId: environmentId }}
@@ -169,6 +169,6 @@ export function DockerSidebar({ environmentId, environment }: Props) {
           label="Registries"
         />
       </SidebarItem>
-    </nav>
+    </>
   );
 }

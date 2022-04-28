@@ -1,6 +1,5 @@
 import { SidebarItem } from '@/portainer/Sidebar/SidebarItem';
 import { EnvironmentId } from '@/portainer/environments/types';
-import { Authorized } from '@/portainer/hooks/useUser';
 
 import { KubectlShellButton } from './KubectlShell';
 
@@ -10,7 +9,7 @@ interface Props {
 
 export function KubernetesSidebar({ environmentId }: Props) {
   return (
-    <nav aria-label="Kubernetes">
+    <>
       <KubectlShellButton environmentId={environmentId} />
 
       <SidebarItem
@@ -34,14 +33,13 @@ export function KubernetesSidebar({ environmentId }: Props) {
         label="Namespaces"
       />
 
-      <Authorized authorizations="HelmInstallChart">
-        <SidebarItem
-          to="kubernetes.templates.helm"
-          params={{ endpointId: environmentId }}
-          iconClass="fa-dharmachakra fa-fw"
-          label="Helm"
-        />
-      </Authorized>
+      <SidebarItem
+        to="kubernetes.templates.helm"
+        params={{ endpointId: environmentId }}
+        iconClass="fa-dharmachakra fa-fw"
+        label="Helm"
+        authorizations="HelmInstallChart"
+      />
 
       <SidebarItem
         to="kubernetes.applications"
@@ -84,6 +82,6 @@ export function KubernetesSidebar({ environmentId }: Props) {
           label="Registries"
         />
       </SidebarItem>
-    </nav>
+    </>
   );
 }

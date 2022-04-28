@@ -4,16 +4,23 @@ import styles from './SidebarSection.module.css';
 
 interface Props {
   title: ReactNode;
+  label?: string;
 }
 
-export function SidebarSection({ title, children }: PropsWithChildren<Props>) {
+export function SidebarSection({
+  title,
+  label,
+  children,
+}: PropsWithChildren<Props>) {
+  const labelText = typeof title === 'string' ? title : label;
+
   return (
     <>
-      <li className={styles.sidebarTitle}>
-        <span>{title}</span>
-      </li>
+      <li className={styles.sidebarTitle}>{title}</li>
 
-      {children}
+      <nav aria-label={labelText}>
+        <ul>{children}</ul>
+      </nav>
     </>
   );
 }

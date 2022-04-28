@@ -12,23 +12,25 @@ interface Props {
 }
 
 export function EnvironmentSidebar({ environment }: Props) {
+  const platform = getPlatformType(environment.Type);
   const sidebar = getSidebar();
 
   return (
     <SidebarSection
       title={
         <div className={styles.title}>
-          <span className="fa fa-plug space-right" />
+          <i className="fa fa-plug space-right" />
           {environment.Name}
         </div>
       }
+      label={PlatformType[platform]}
     >
       {sidebar}
     </SidebarSection>
   );
 
   function getSidebar() {
-    switch (getPlatformType(environment.Type)) {
+    switch (platform) {
       case PlatformType.Azure:
         return <AzureSidebar environmentId={environment.Id} />;
       case PlatformType.Docker:
