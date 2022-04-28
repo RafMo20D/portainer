@@ -11,7 +11,7 @@ import {
 import { useSidebarState } from '../useSidebarState';
 
 import styles from './Menu.module.css';
-import { SidebarLink } from './Link';
+import { Link } from './Link';
 
 interface Props {
   head: ReactNode;
@@ -106,7 +106,7 @@ function getPaths(element: ReactNode, paths: string[]): string[] {
     return paths;
   }
 
-  if (element.type !== SidebarLink) {
+  if (element.type !== Link) {
     return Children.map(element.props.children, (child) =>
       getPaths(child, paths)
     );

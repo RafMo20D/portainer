@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { useAuthorizations } from '@/portainer/hooks/useUser';
 
 import { Wrapper } from './Wrapper';
-import { SidebarLink } from './Link';
+import { Link } from './Link';
 import { Menu } from './Menu';
 import { Icon } from './Icon';
 
@@ -27,10 +27,10 @@ export function SidebarItem({
   adminOnlyCE,
 }: Props) {
   const head = (
-    <SidebarLink to={to} params={params}>
+    <Link to={to} params={params}>
       {label}
       {iconClass && <Icon iconClass={iconClass} />}
-    </SidebarLink>
+    </Link>
   );
 
   const isAuthorized = useAuthorizations(authorizations, adminOnlyCE);
