@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   ReactElement,
   ReactNode,
+  useMemo,
   useReducer,
 } from 'react';
 
@@ -19,7 +20,7 @@ interface Props {
 
 export function Menu({ children, head }: PropsWithChildren<Props>) {
   const { isOpen: isSidebarOpen } = useSidebarState();
-  const paths = getPathsForChildren(children);
+  const paths = useMemo(() => getPathsForChildren(children), [children]);
 
   const { isOpen, toggleOpen } = useIsOpen(isSidebarOpen, paths);
 
