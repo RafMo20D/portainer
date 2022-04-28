@@ -3,7 +3,7 @@ import angular from 'angular';
 import edgeStackModule from './views/edge-stacks';
 import { componentsModule } from './components';
 import { WaitingRoomViewAngular } from './EdgeDevices/WaitingRoomView';
-import { EdgeDevicesViewAngular } from './EdgeDevices/EdgeDevicesView';
+import { EdgeDevicesViewAngular } from './EdgeDevices/EdgeDevicesView/EdgeDevicesView';
 
 angular
   .module('portainer.edge', [edgeStackModule, componentsModule])
