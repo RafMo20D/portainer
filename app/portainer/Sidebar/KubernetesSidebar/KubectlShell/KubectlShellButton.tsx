@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 
 import { Button } from '@/portainer/components/Button';
 import { EnvironmentId } from '@/portainer/environments/types';
+import { useAnalytics } from '@/angulartics.matomo/analytics-services';
 
 import { KubeCtlShell } from './KubectlShell';
 import styles from './KubectlShellButton.module.css';
@@ -12,7 +13,7 @@ interface Props {
 }
 export function KubectlShellButton({ environmentId }: Props) {
   const [open, setOpen] = useState(false);
-
+  const { trackEvent } = useAnalytics();
   return (
     <>
       <Button
@@ -20,11 +21,8 @@ export function KubectlShellButton({ environmentId }: Props) {
         size="xsmall"
         disabled={open}
         data-cy="k8sSidebar-shellButton"
-        onClick={() => setOpen(true)}
+        onClick={() => handleOpen()}
         className={styles.root}
-        analytics-on
-        analytics-category="kubernetes"
-        analytics-event="kubernetes-kubectl-shell"
       >
         <i className="fa fa-terminal space-right" /> kubectl shell
       </Button>
@@ -39,4 +37,10 @@ export function KubectlShellButton({ environmentId }: Props) {
         )}
     </>
   );
+
+  function handleOpen() {
+    setOpen(true);
+
+    trackEvent('kubernetes-kubectl-shell', { category: 'kubernetes' });
+  }
 }
