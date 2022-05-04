@@ -1,5 +1,6 @@
 import { SidebarItem } from '@/portainer/Sidebar/SidebarItem';
 import { EnvironmentId } from '@/portainer/environments/types';
+import { Authorized } from '@/portainer/hooks/useUser';
 
 import { KubectlShellButton } from './KubectlShell';
 
@@ -33,13 +34,14 @@ export function KubernetesSidebar({ environmentId }: Props) {
         label="Namespaces"
       />
 
-      <SidebarItem
-        to="kubernetes.templates.helm"
-        params={{ endpointId: environmentId }}
-        iconClass="fa-dharmachakra fa-fw"
-        label="Helm"
-        authorizations="HelmInstallChart"
-      />
+      <Authorized authorizations="HelmInstallChart">
+        <SidebarItem
+          to="kubernetes.templates.helm"
+          params={{ endpointId: environmentId }}
+          iconClass="fa-dharmachakra fa-fw"
+          label="Helm"
+        />
+      </Authorized>
 
       <SidebarItem
         to="kubernetes.applications"
@@ -68,13 +70,13 @@ export function KubernetesSidebar({ environmentId }: Props) {
         to="kubernetes.cluster"
         params={{ endpointId: environmentId }}
       >
-        <SidebarItem
-          to="portainer.k8sendpoint.kubernetesConfig"
-          params={{ id: environmentId }}
-          label="Setup"
-          authorizations="K8sClusterSetupRW"
-          adminOnlyCE
-        />
+        <Authorized authorizations="K8sClusterSetupRW" adminOnlyCE>
+          <SidebarItem
+            to="portainer.k8sendpoint.kubernetesConfig"
+            params={{ id: environmentId }}
+            label="Setup"
+          />
+        </Authorized>
 
         <SidebarItem
           to="kubernetes.registries"
