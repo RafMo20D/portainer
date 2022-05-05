@@ -15,11 +15,11 @@ function update(height: string, overflowY: string) {
   const sidebarWrapper = document.getElementById('sidebar-wrapper');
 
   if (contentWrapper) {
-    contentWrapper.style.height = `${height}px`;
+    contentWrapper.style.height = height;
     contentWrapper.style.overflowY = overflowY;
   }
 
   if (sidebarWrapper) {
-    sidebarWrapper.style.height = `${height}px`;
+    sidebarWrapper.style.height = height;
   }
 }

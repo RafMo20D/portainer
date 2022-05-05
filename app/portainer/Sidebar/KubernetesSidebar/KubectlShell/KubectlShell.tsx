@@ -1,6 +1,6 @@
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { Button } from '@/portainer/components/Button';
@@ -17,7 +17,7 @@ import styles from './KubectlShell.module.css';
 
 interface ShellState {
   socket: WebSocket | null;
-  terminal: Terminal | null;
+  terminal: Terminal;
   minimized: boolean;
 }
 
@@ -29,101 +29,97 @@ interface Props {
 export function KubeCtlShell({ environmentId, onClose }: Props) {
   const [shell, setShell] = useState<ShellState>({
     socket: null,
-    terminal: null,
+    terminal: new Terminal(),
     minimized: false,
   });
+
+  const { terminal, socket } = useMemo(() => shell, [shell]);
+
   const terminalElem = useRef(null);
 
   const [jwt] = useLocalStorage('JWT', '');
 
-  const handleUnload = useCallback(() => '', []);
-
-  const handleDisconnect = useCallback(() => {
-    terminalClose();
-    shell.socket?.close();
-    shell.terminal?.dispose();
-    window.removeEventListener('resize', terminalResize);
+  const internalOnClose = useCallback(() => {
+    terminalClose(); // only css trick
+    socket?.close();
+    terminal.dispose();
     onClose();
-  }, [shell.socket, shell.terminal, onClose]);
+  }, [onClose, terminal, socket]);
 
-  const handleConnect = useCallback(() => {
+  const openTerminal = useCallback(() => {
     if (!terminalElem.current) {
-      throw new Error('missing terminal element');
+      return;
     }
 
-    terminalResize();
+    terminal.open(terminalElem.current);
+    terminal.setOption('cursorBlink', true);
+    terminal.focus();
+    fit(terminal);
+    terminal.writeln('#Run kubectl commands inside here');
+    terminal.writeln('#e.g. kubectl get all');
+    terminal.writeln('');
+  }, [terminal]);
 
-    const params = {
-      token: jwt,
-      endpointId: environmentId,
-    };
-
-    const wsProtocol =
-      window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-    const path = `${baseHref()}api/websocket/kubernetes-shell`;
-    const base = path.startsWith('http')
-      ? path.replace(/^https?:\/\//i, '')
-      : window.location.host + path;
-
-    const queryParams = Object.entries(params)
-      .map(([k, v]) => `${k}=${v}`)
-      .join('&');
-    const url = `${wsProtocol}${base}?${queryParams}`;
-
-    const socket = new WebSocket(url);
-    const terminal = new Terminal();
-
-    socket.addEventListener('open', () => {
-      if (!terminalElem.current) {
-        return;
-      }
-
-      terminal.open(terminalElem.current);
-      terminal.setOption('cursorBlink', true);
-      terminal.focus();
-      fit(terminal);
-      terminal.writeln('#Run kubectl commands inside here');
-      terminal.writeln('#e.g. kubectl get all');
-      terminal.writeln('');
-    });
-
-    socket.addEventListener('message', (event) => {
-      terminal.write(event.data);
-    });
-
-    terminal.onData((data) => {
-      socket.send(data);
-    });
-
-    socket.addEventListener('close', () => {
-      handleDisconnect();
-    });
-
-    socket.addEventListener('error', (event) => {
-      handleDisconnect();
-      if (socket.readyState !== WebSocket.CLOSED) {
+  // refresh socket listeners on socket updates
+  useEffect(() => {
+    if (!socket) {
+      return () => {};
+    }
+    function onOpen() {
+      openTerminal();
+    }
+    function onMessage(e: MessageEvent) {
+      terminal.write(e.data);
+    }
+    function onClose() {
+      internalOnClose();
+    }
+    function onError(e: Event) {
+      internalOnClose();
+      if (socket?.readyState !== WebSocket.CLOSED) {
         notifyError(
           'Failure',
-          event as unknown as Error,
+          e as unknown as Error,
           'Websocket connection error'
         );
       }
-    });
+    }
 
-    window.addEventListener('resize', terminalResize);
-
-    setShell({ socket, terminal, minimized: false });
-  }, [handleDisconnect, environmentId, jwt]);
-
-  useEffect(() => {
-    handleConnect();
-    window.addEventListener('beforeunload', handleUnload);
+    socket.addEventListener('open', onOpen);
+    socket.addEventListener('message', onMessage);
+    socket.addEventListener('close', onClose);
+    socket.addEventListener('error', onError);
 
     return () => {
-      handleDisconnect();
-      window.removeEventListener('beforeunload', handleUnload);
+      socket.removeEventListener('open', onOpen);
+      socket.removeEventListener('message', onMessage);
+      socket.removeEventListener('close', onClose);
+      socket.removeEventListener('error', onError);
     };
-  }, [handleConnect, handleDisconnect, handleUnload]);
+  }, [internalOnClose, openTerminal, socket, terminal]);
+
+  // on component load/destroy
+  useEffect(() => {
+    const socket = new WebSocket(buildUrl(jwt, environmentId));
+    setShell((shell) => ({ ...shell, socket }));
+
+    terminal.onData((data) => socket.send(data));
+    terminal.onKey(({ domEvent }) => {
+      if (domEvent.ctrlKey && domEvent.code === 'KeyD') {
+        close();
+      }
+    });
+
+    window.addEventListener('resize', () => terminalResize());
+
+    function close() {
+      socket.close();
+      terminal.dispose();
+      window.removeEventListener('resize', terminalResize);
+    }
+
+    return close;
+  }, [environmentId, jwt, terminal]);
 
   return (
     <div className={clsx(styles.root, { [styles.minimized]: shell.minimized })}>
@@ -147,7 +143,7 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
               }
             />
           </Button>
-          <Button color="link" onClick={handleDisconnect}>
+          <Button color="link" onClick={internalOnClose}>
             <i className="fas fa-times" data-cy="k8sShell-closeButton" />
           </Button>
         </div>
@@ -171,5 +167,24 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
       terminalClose();
       setShell((shell) => ({ ...shell, minimized: true }));
     }
+  }
+
+  function buildUrl(jwt: string, environmentId: EnvironmentId) {
+    const params = {
+      token: jwt,
+      endpointId: environmentId,
+    };
+
+    const wsProtocol =
+      window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const path = `${baseHref()}api/websocket/kubernetes-shell`;
+    const base = path.startsWith('http')
+      ? path.replace(/^https?:\/\//i, '')
+      : window.location.host + path;
+
+    const queryParams = Object.entries(params)
+      .map(([k, v]) => `${k}=${v}`)
+      .join('&');
+    return `${wsProtocol}${base}?${queryParams}`;
   }
 }
