@@ -1,6 +1,6 @@
 import { Terminal } from 'xterm';
 import { fit } from 'xterm/lib/addons/fit/fit';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
 import { Button } from '@/portainer/components/Button';
@@ -17,7 +17,6 @@ import styles from './KubectlShell.module.css';
 
 interface ShellState {
   socket: WebSocket | null;
-  terminal: Terminal;
   minimized: boolean;
 }
 
@@ -27,19 +26,20 @@ interface Props {
 }
 
 export function KubeCtlShell({ environmentId, onClose }: Props) {
+  const [terminal] = useState(new Terminal());
+
   const [shell, setShell] = useState<ShellState>({
     socket: null,
-    terminal: new Terminal(),
     minimized: false,
   });
 
-  const { terminal, socket } = useMemo(() => shell, [shell]);
+  const { socket } = shell;
 
   const terminalElem = useRef(null);
 
   const [jwt] = useLocalStorage('JWT', '');
 
-  const internalOnClose = useCallback(() => {
+  const handleClose = useCallback(() => {
     terminalClose(); // only css trick
     socket?.close();
     terminal.dispose();
@@ -72,10 +72,10 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
       terminal.write(e.data);
     }
     function onClose() {
-      internalOnClose();
+      handleClose();
     }
     function onError(e: Event) {
-      internalOnClose();
+      handleClose();
       if (socket?.readyState !== WebSocket.CLOSED) {
         notifyError(
           'Failure',
@@ -96,7 +96,7 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
       socket.removeEventListener('close', onClose);
       socket.removeEventListener('error', onError);
     };
-  }, [internalOnClose, openTerminal, socket, terminal]);
+  }, [handleClose, openTerminal, socket, terminal]);
 
   // on component load/destroy
   useEffect(() => {
@@ -143,7 +143,7 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
               }
             />
           </Button>
-          <Button color="link" onClick={internalOnClose}>
+          <Button color="link" onClick={handleClose}>
             <i className="fas fa-times" data-cy="k8sShell-closeButton" />
           </Button>
         </div>
@@ -156,7 +156,7 @@ export function KubeCtlShell({ environmentId, onClose }: Props) {
   );
 
   function clearScreen() {
-    shell.terminal?.clear();
+    terminal.clear();
   }
 
   function toggleMinimize() {
