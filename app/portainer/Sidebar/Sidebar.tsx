@@ -2,7 +2,7 @@ import { r2a } from '@/react-tools/react2angular';
 import { Environment } from '@/portainer/environments/types';
 import { useUser } from '@/portainer/hooks/useUser';
 import { useIsTeamLeader } from '@/portainer/users/queries';
-import { usePublicSettings } from '@/portainer/settings/settings.service';
+import { usePublicSettings } from '@/portainer/settings/queries';
 
 import styles from './Sidebar.module.css';
 import { EdgeComputeSidebar } from './EdgeComputeSidebar';

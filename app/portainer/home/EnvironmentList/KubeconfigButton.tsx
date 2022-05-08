@@ -5,7 +5,7 @@ import { Environment } from '@/portainer/environments/types';
 import { isKubernetesEnvironment } from '@/portainer/environments/utils';
 import { trackEvent } from '@/angulartics.matomo/analytics-services';
 import { Button } from '@/portainer/components/Button';
-import { usePublicSettings } from '@/portainer/settings/settings.service';
+import { usePublicSettings } from '@/portainer/settings/queries';
 
 interface Props {
   environments?: Environment[];
