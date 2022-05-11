@@ -33,8 +33,8 @@ export function withInvalidate(
 ) {
   return {
     onSuccess() {
-      return queryKeysToInvalidate.map((keys) =>
-        queryClient.invalidateQueries(keys)
+      return Promise.all(
+        queryKeysToInvalidate.map((keys) => queryClient.invalidateQueries(keys))
       );
     },
   };

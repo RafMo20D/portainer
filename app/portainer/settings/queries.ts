@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
+import {
+  mutationOptions,
+  withError,
+  withInvalidate,
+} from '@/react-tools/react-query';
+
 import { PublicSettingsViewModel } from '../models/settings';
 
 import {
@@ -14,42 +20,25 @@ export function usePublicSettings<T = PublicSettingsViewModel>(
 ) {
   return useQuery(['settings', 'public'], () => getPublicSettings(), {
     select,
-    meta: {
-      error: {
-        title: 'Failure',
-        message: 'Unable to retrieve settings',
-      },
-    },
+    ...withError('Unable to retrieve public settings'),
   });
 }
 
 export function useSettings<T = Settings>(select?: (settings: Settings) => T) {
   return useQuery(['settings'], getSettings, {
     select,
-    meta: {
-      error: {
-        title: 'Failure',
-        message: 'Unable to retrieve settings',
-      },
-    },
+    ...withError('Unable to retrieve settings'),
   });
 }
 
 export function useUpdateSettingsMutation() {
   const queryClient = useQueryClient();
 
-  return useMutation(updateSettings, {
-    onSuccess() {
-      queryClient.invalidateQueries(['settings']);
-
-      // invalidate the cloud info too, incase the cloud api keys changed
-      return queryClient.invalidateQueries(['cloud']);
-    },
-    meta: {
-      error: {
-        title: 'Failure',
-        message: 'Unable to update settings',
-      },
-    },
-  });
+  return useMutation(
+    updateSettings,
+    mutationOptions(
+      withInvalidate(queryClient, [['settings'], ['cloud']]),
+      withError('Unable to update settings')
+    )
+  );
 }
