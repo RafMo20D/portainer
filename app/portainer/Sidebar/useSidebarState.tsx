@@ -99,12 +99,6 @@ function useSidebarStateLocal() {
     setIsOpen(value);
   }
 
-  function isMobile() {
-    const width = window.innerWidth;
-
-    return width < mobileWidth;
-  }
-
   function initialState() {
     if (isMobile() || window.ddExtension) {
       return false;
@@ -137,10 +131,7 @@ function useStateWithUndo<T>(
     [state]
   );
 
-  return useMemo(
-    () => [state, handleSetState, undo],
-    [state, handleSetState, undo]
-  );
+  return [state, handleSetState, undo];
 }
 
 function useUpdateAngularService(isOpen: boolean) {
@@ -155,4 +146,10 @@ function useUpdateAngularService(isOpen: boolean) {
       }
     );
   }, [isOpen]);
+}
+
+function isMobile() {
+  const width = window.innerWidth;
+
+  return width < mobileWidth;
 }
