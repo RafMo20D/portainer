@@ -1,5 +1,13 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import angular, { IScope } from 'angular';
+import _ from 'lodash';
 
 import * as storage from '@/portainer/hooks/useLocalStorage';
 
@@ -9,7 +17,7 @@ const storageKey = 'toolbar_toggle';
 
 interface State {
   isOpen: boolean;
-  toggle?(): void;
+  toggle(): void;
 }
 
 const Context = createContext<State | null>(null);
@@ -50,21 +58,93 @@ export function AngularSidebarService($rootScope: IScope) {
 }
 
 function useSidebarStateLocal() {
-  const [isMobile, setIsMobile] = useState(false);
   const [storageIsOpen, setIsOpenInStorage] = storage.useLocalStorage(
     storageKey,
     true
   );
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen, undoIsOpenChange] = useStateWithUndo(
+    initialState()
+  );
+
+  const onResize = useMemo(
+    () =>
+      _.debounce(() => {
+        if (isMobile()) {
+          setIsOpen(false);
+        } else {
+          undoIsOpenChange();
+        }
+      }, 300),
+    [setIsOpen, undoIsOpenChange]
+  );
+
+  useUpdateAngularService(isOpen);
 
   useEffect(() => {
-    let isOpen = isMobile ? false : storageIsOpen;
     if (window.ddExtension) {
-      isOpen = false;
+      return undefined;
     }
 
-    setIsOpen(isOpen);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [onResize]);
 
+  return {
+    isOpen,
+    toggle,
+  };
+
+  function toggle(value = !isOpen) {
+    setIsOpenInStorage(value);
+    setIsOpen(value);
+  }
+
+  function isMobile() {
+    const width = window.innerWidth;
+
+    return width < mobileWidth;
+  }
+
+  function initialState() {
+    if (isMobile() || window.ddExtension) {
+      return false;
+    }
+
+    return storageIsOpen;
+  }
+}
+
+function useStateWithUndo<T>(
+  initialState: T
+): [T, (value: T) => void, () => void] {
+  const [state, setState] = useState(initialState);
+  const [prevState, setPrevState] = useState<T>();
+
+  const undo = useCallback(() => {
+    if (!prevState) {
+      return;
+    }
+
+    setState(prevState);
+    setPrevState(undefined);
+  }, [prevState]);
+
+  const handleSetState = useCallback(
+    (newState: T) => {
+      setPrevState(state);
+      setState(newState);
+    },
+    [state]
+  );
+
+  return useMemo(
+    () => [state, handleSetState, undo],
+    [state, handleSetState, undo]
+  );
+}
+
+function useUpdateAngularService(isOpen: boolean) {
+  useEffect(() => {
     // to sync "outside state" - for angularjs
     const $injector = angular.element(document).injector();
     $injector.invoke(
@@ -74,29 +154,5 @@ function useSidebarStateLocal() {
         SidebarService.setIsOpen(isOpen);
       }
     );
-  }, [storageIsOpen, isMobile]);
-
-  function toggle(value = !storageIsOpen) {
-    setIsOpenInStorage(value);
-  }
-
-  useEffect(() => {
-    if (window.ddExtension) {
-      return undefined;
-    }
-
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-
-  function onResize() {
-    const width = window.innerWidth;
-    setIsMobile(width < mobileWidth);
-  }
-
-  return {
-    isOpen,
-    toggle: !isMobile ? toggle : undefined,
-  };
+  }, [isOpen]);
 }
