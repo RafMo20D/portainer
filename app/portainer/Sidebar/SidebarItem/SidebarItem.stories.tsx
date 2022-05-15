@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { SidebarItem } from '.';
 
 const meta: Meta = {
-  title: 'Components/SidebarMenuItem',
+  title: 'Sidebar/SidebarItem',
   component: SidebarItem,
 };
 export default meta;
