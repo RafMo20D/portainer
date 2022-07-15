@@ -88,7 +88,18 @@ func (handler *Handler) endpointUpdate(w http.ResponseWriter, r *http.Request) *
 	}
 
 	if payload.Name != nil {
-		endpoint.Name = *payload.Name
+		name := *payload.Name
+		isUnique, err := handler.isNameUnique(name, endpoint.ID)
+		if err != nil {
+			return httperror.InternalServerError("Unable to check if name is unique", err)
+		}
+
+		if !isUnique {
+			return httperror.NewError(http.StatusConflict, "Name is not unique", nil)
+		}
+
+		endpoint.Name = name
+
 	}
 
 	if payload.URL != nil {
@@ -254,7 +265,7 @@ func (handler *Handler) endpointUpdate(w http.ResponseWriter, r *http.Request) *
 		}
 	}
 
-	if payload.URL != nil || payload.TLS != nil || endpoint.Type == portainer.AzureEnvironment {
+	if (payload.URL != nil && *payload.URL != endpoint.URL) || (payload.TLS != nil && endpoint.TLSConfig.TLS != *payload.TLS) || endpoint.Type == portainer.AzureEnvironment {
 		handler.ProxyManager.DeleteEndpointProxy(endpoint.ID)
 		_, err = handler.ProxyManager.CreateAndRegisterEndpointProxy(endpoint)
 		if err != nil {

@@ -54,44 +54,14 @@ export interface KubernetesSettings {
   Snapshots?: KubernetesSnapshot[] | null;
 }
 
-export type Environment = {
-  Id: EnvironmentId;
-  Type: EnvironmentType;
-  TagIds: TagId[];
-  GroupId: EnvironmentGroupId;
-  EdgeID?: string;
-  EdgeCheckinInterval?: number;
-  QueryDate?: number;
-  LastCheckInDate?: number;
-  Name: string;
-  Status: EnvironmentStatus;
-  URL: string;
-  Snapshots: DockerSnapshot[];
-  Kubernetes: KubernetesSettings;
-  PublicURL?: string;
-  IsEdgeDevice?: boolean;
-  UserTrusted: boolean;
-  AMTDeviceGUID?: string;
+export type EnvironmentEdge = {
+  AsyncMode: boolean;
+  PingInterval: number;
+  SnapshotInterval: number;
+  CommandInterval: number;
 };
 
-/**
- * TS reference of endpoint_create.go#EndpointCreationType iota
- */
-export enum EnvironmentCreationTypes {
-  LocalDockerEnvironment = 1,
-  AgentEnvironment,
-  AzureEnvironment,
-  EdgeAgentEnvironment,
-  LocalKubernetesEnvironment,
-}
-
-export enum PlatformType {
-  Docker,
-  Kubernetes,
-  Azure,
-}
-
-export interface EnvironmentSettings {
+export interface EnvironmentSecuritySettings {
   // Whether non-administrator should be able to use bind mounts when creating containers
   allowBindMountsForRegularUsers: boolean;
   // Whether non-administrator should be able to use privileged mode when creating containers
@@ -110,4 +80,44 @@ export interface EnvironmentSettings {
   allowSysctlSettingForRegularUsers: boolean;
   // Whether host management features are enabled
   enableHostManagementFeatures: boolean;
+}
+
+export type Environment = {
+  Id: EnvironmentId;
+  Type: EnvironmentType;
+  TagIds: TagId[];
+  GroupId: EnvironmentGroupId;
+  EdgeID?: string;
+  EdgeKey: string;
+  EdgeCheckinInterval?: number;
+  QueryDate?: number;
+  LastCheckInDate?: number;
+  Name: string;
+  Status: EnvironmentStatus;
+  URL: string;
+  Snapshots: DockerSnapshot[];
+  Kubernetes: KubernetesSettings;
+  PublicURL?: string;
+  IsEdgeDevice?: boolean;
+  UserTrusted: boolean;
+  AMTDeviceGUID?: string;
+  Edge: EnvironmentEdge;
+  SecuritySettings: EnvironmentSecuritySettings;
+};
+/**
+ * TS reference of endpoint_create.go#EndpointCreationType iota
+ */
+export enum EnvironmentCreationTypes {
+  LocalDockerEnvironment = 1,
+  AgentEnvironment,
+  AzureEnvironment,
+  EdgeAgentEnvironment,
+  LocalKubernetesEnvironment,
+  KubeConfigEnvironment,
+}
+
+export enum PlatformType {
+  Docker,
+  Kubernetes,
+  Azure,
 }
